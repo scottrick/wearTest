@@ -25,8 +25,8 @@ public class SnakeSurface extends SurfaceView implements Runnable {
 
     private int snakeDirection = DIR_LEFT;
 
-    private static final int TICKS_PER_UPDATE = 1000 / 20;
-    private static final int TICKS_PER_REDRAW = 1000 / 10;
+    private static final int TICKS_PER_UPDATE = 1000 / 50;
+    private static final int TICKS_PER_REDRAW = 1000 / 25;
 
     private boolean isPaused;
 
@@ -45,9 +45,6 @@ public class SnakeSurface extends SurfaceView implements Runnable {
     private int screenheight;
     private int screenwidth;
     private float density;
-
-    private volatile int cx;
-    private volatile int cy;
 
     private volatile boolean running = false;
 
@@ -84,7 +81,7 @@ public class SnakeSurface extends SurfaceView implements Runnable {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if(event.getAction() == MotionEvent.ACTION_DOWN) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
             changeDirection();
             Log.e("hatfat", "snakeDirection " + snakeDirection);
             return true;
@@ -101,7 +98,9 @@ public class SnakeSurface extends SurfaceView implements Runnable {
 
     @Override
     public void run() {
-        while(running) {
+        currentTime = System.currentTimeMillis();
+
+        while (running) {
             previousTime = currentTime;
             currentTime = System.currentTimeMillis();
 
@@ -113,17 +112,15 @@ public class SnakeSurface extends SurfaceView implements Runnable {
 
             //update the game state
             while (currentGameTick >= nextUpdateTick) {
-                float gameTime = (float)currentGameTick / 1000.0f;
+                float gameUpdateTime = (float)nextUpdateTick / 1000.0f;
 
-                update(gameTime);
+                update(gameUpdateTime);
                 nextUpdateTick += TICKS_PER_UPDATE;
             }
 
-            if(!holder.getSurface().isValid()) {
+            if (!holder.getSurface().isValid()) {
                 continue; //wait till it becomes valid
             }
-
-            Log.e("hatfat", "here " + currentGameTick + ", " + nextDrawTick);
 
             if (currentGameTick < nextDrawTick) {
                 //don't draw yet
@@ -139,25 +136,10 @@ public class SnakeSurface extends SurfaceView implements Runnable {
     }
 
     private void update(float gameTime) {
-        Log.e("hatfat", "update: " + gameTime);
-//        cx +=opx;
-//        cy +=opy;
-//        if(cy>screenheight) {
-//            opy = -1;
-//        } else if(cy<0) {
-//            opy = +1;
-//        }
-//
-//        if(cx>screenwidth) {
-//            opx = -1;
-//        } else if(cx<0) {
-//            opx = +1;
-//        }
+
     }
 
     private void draw() {
-        Log.e("hatfat", "draw");
-
         Canvas canvas = holder.lockCanvas();
 
         //paint background
@@ -175,12 +157,13 @@ public class SnakeSurface extends SurfaceView implements Runnable {
     public void pause() {
         running = false;
         boolean retry = true;
-        while(retry) {
+
+        while (retry) {
             try {
                 renderThread.join();
                 retry = false;
             }
-            catch( InterruptedException e) {
+            catch (InterruptedException e) {
                 //retry
             }
         }
