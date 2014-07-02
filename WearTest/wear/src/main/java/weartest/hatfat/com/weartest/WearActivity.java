@@ -17,7 +17,7 @@ public class WearActivity extends Activity {
 
         setContentView(R.layout.activity_snake);
         gameSurface = (GameSurface) findViewById(R.id.view_surface);
-        gameSurface.setGame(new SnakeGame());
+        gameSurface.setGame(new SnakeGame(gameSurface));
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }

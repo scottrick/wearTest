@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -29,8 +28,8 @@ public class GameSurface extends SurfaceView implements Runnable {
 
     private Paint backgroundPaint;
 
-    private int screenheight;
-    private int screenwidth;
+    private int screenHeight;
+    private int screenWidth;
     private float density;
 
     private volatile boolean running = false;
@@ -59,8 +58,8 @@ public class GameSurface extends SurfaceView implements Runnable {
         holder = getHolder();
 
         DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
-        screenheight = dm.heightPixels;
-        screenwidth = dm.widthPixels;
+        screenHeight = dm.heightPixels;
+        screenWidth = dm.widthPixels;
         density = dm.density;
 
         backgroundPaint = new Paint();
@@ -85,6 +84,14 @@ public class GameSurface extends SurfaceView implements Runnable {
         running = true;
         renderThread = new Thread(this);
         renderThread.start();
+    }
+
+    public int getScreenWidth() {
+        return screenWidth;
+    }
+
+    public int getScreenHeight() {
+        return screenHeight;
     }
 
     @Override

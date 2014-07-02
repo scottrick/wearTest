@@ -10,6 +10,7 @@ import java.util.Random;
 
 import weartest.hatfat.com.weartest.game.Game;
 import weartest.hatfat.com.weartest.game.GameObject;
+import weartest.hatfat.com.weartest.game.GameSurface;
 
 /**
  * Created by scottrick on 7/2/14.
@@ -21,7 +22,9 @@ public class SnakeGame extends Game {
     private Snake snake;
     private List<GameObject> apples;
 
-    public SnakeGame() {
+    public SnakeGame(GameSurface surface) {
+        super(surface);
+
         applePaint = new Paint();
         applePaint.setStyle(Paint.Style.FILL);
         applePaint.setColor(0xffaa0000);
@@ -57,8 +60,12 @@ public class SnakeGame extends Game {
 
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//            snake.changeDirection();
-            generateApples();
+            if (event.getX() < getSurface().getWidth() / 2) {
+                snake.turnLeft();
+            }
+            else {
+                snake.turnRight();
+            }
             return true;
         }
 

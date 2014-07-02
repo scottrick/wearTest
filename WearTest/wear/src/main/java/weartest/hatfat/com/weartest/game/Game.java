@@ -15,8 +15,11 @@ import weartest.hatfat.com.weartest.game.GameObject;
 public class Game implements GameObject {
     private List<GameObject> objects;
 
-    public Game() {
-        objects = new LinkedList<GameObject>();
+    private GameSurface surface;
+
+    public Game(GameSurface surface) {
+        this.surface = surface;
+        this.objects = new LinkedList<GameObject>();
     }
 
     public boolean onTouchEvent(MotionEvent event) {
@@ -55,5 +58,9 @@ public class Game implements GameObject {
 
     public void removeAllObjects() {
         objects.clear();
+    }
+
+    public GameSurface getSurface() {
+        return surface;
     }
 }
