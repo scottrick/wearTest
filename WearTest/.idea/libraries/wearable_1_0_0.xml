@@ -5,6 +5,8 @@
       <root url="file://$PROJECT_DIR$/build/intermediates/exploded-aar/com.google.android.support/wearable/1.0.0/res" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="file://$APPLICATION_HOME_DIR$/sdk/sources/android-20" />
+    </SOURCES>
   </library>
 </component>

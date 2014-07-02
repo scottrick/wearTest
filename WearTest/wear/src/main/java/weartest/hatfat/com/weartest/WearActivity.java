@@ -2,23 +2,34 @@ package weartest.hatfat.com.weartest;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.wearable.view.WatchViewStub;
-import android.widget.TextView;
+import android.util.Log;
+import android.view.WindowManager;
 
 public class WearActivity extends Activity {
 
-    private TextView mTextView;
+    private SnakeSurface snakeSurface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wear);
-        final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
-        stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
-            @Override
-            public void onLayoutInflated(WatchViewStub stub) {
-                mTextView = (TextView) stub.findViewById(R.id.text);
-            }
-        });
+
+        setContentView(R.layout.activity_snake);
+        snakeSurface = (SnakeSurface) findViewById(R.id.view_surface);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        snakeSurface.pause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        snakeSurface.resume();
     }
 }
