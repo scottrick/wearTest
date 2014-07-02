@@ -66,6 +66,9 @@ public class SnakeGame extends Game {
             else {
                 snake.turnRight();
             }
+
+            generateApples();
+
             return true;
         }
 
