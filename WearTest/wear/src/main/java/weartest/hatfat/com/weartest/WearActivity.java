@@ -2,19 +2,22 @@ package weartest.hatfat.com.weartest;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.WindowManager;
+
+import weartest.hatfat.com.weartest.game.GameSurface;
+import weartest.hatfat.com.weartest.snake.SnakeGame;
 
 public class WearActivity extends Activity {
 
-    private SnakeSurface snakeSurface;
+    private GameSurface gameSurface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_snake);
-        snakeSurface = (SnakeSurface) findViewById(R.id.view_surface);
+        gameSurface = (GameSurface) findViewById(R.id.view_surface);
+        gameSurface.setGame(new SnakeGame());
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
@@ -23,13 +26,13 @@ public class WearActivity extends Activity {
     protected void onPause() {
         super.onPause();
 
-        snakeSurface.pause();
+        gameSurface.pause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        snakeSurface.resume();
+        gameSurface.resume();
     }
 }

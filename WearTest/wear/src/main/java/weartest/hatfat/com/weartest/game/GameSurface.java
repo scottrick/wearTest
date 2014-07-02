@@ -1,8 +1,7 @@
-package weartest.hatfat.com.weartest;
+package weartest.hatfat.com.weartest.game;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -10,20 +9,11 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 
 /**
  * Created by scottrick on 7/2/14.
  */
-public class SnakeSurface extends SurfaceView implements Runnable {
-
-    private static final int DIR_LEFT = 0;
-    private static final int DIR_UP = 1;
-    private static final int DIR_RIGHT = 2;
-    private static final int DIR_DOWN = 3;
-    private static final int DIR_NUM = 4;
-
-    private int snakeDirection = DIR_LEFT;
+public class GameSurface extends SurfaceView implements Runnable {
 
     private static final int TICKS_PER_UPDATE = 1000 / 50;
     private static final int TICKS_PER_REDRAW = 1000 / 25;
@@ -38,9 +28,6 @@ public class SnakeSurface extends SurfaceView implements Runnable {
     private long nextDrawTick;
 
     private Paint backgroundPaint;
-    private Paint snakeBodyPaint;
-    private Paint snakeHeadPaint;
-    private Paint applePaint;
 
     private int screenheight;
     private int screenwidth;
@@ -51,17 +38,19 @@ public class SnakeSurface extends SurfaceView implements Runnable {
     private SurfaceHolder holder;
     private Thread renderThread = null;
 
-    public SnakeSurface(Context context) {
+    private Game game;
+
+    public GameSurface(Context context) {
         super(context);
         init();
     }
 
-    public SnakeSurface(Context context, AttributeSet attrs) {
+    public GameSurface(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public SnakeSurface(Context context, AttributeSet attrs, int defStyle) {
+    public GameSurface(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
     }
@@ -76,15 +65,17 @@ public class SnakeSurface extends SurfaceView implements Runnable {
 
         backgroundPaint = new Paint();
         backgroundPaint.setStyle(Paint.Style.FILL);
-        backgroundPaint.setColor(0xff00aa00);
+        backgroundPaint.setColor(0xff000000);
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            changeDirection();
-            Log.e("hatfat", "snakeDirection " + snakeDirection);
-            return true;
+        if (game != null) {
+            return game.onTouchEvent(event);
         }
 
         return false;
@@ -112,9 +103,9 @@ public class SnakeSurface extends SurfaceView implements Runnable {
 
             //update the game state
             while (currentGameTick >= nextUpdateTick) {
-                float gameUpdateTime = (float)nextUpdateTick / 1000.0f;
+                float deltaTime = (float)TICKS_PER_UPDATE / 1000.0f;
+                update(deltaTime);
 
-                update(gameUpdateTime);
                 nextUpdateTick += TICKS_PER_UPDATE;
             }
 
@@ -135,21 +126,25 @@ public class SnakeSurface extends SurfaceView implements Runnable {
         }
     }
 
-    private void update(float gameTime) {
+    private void update(float deltaTime) {
+        if (game == null) {
+            return;
+        }
 
+        game.update(deltaTime);
     }
 
     private void draw() {
+        if (game == null) {
+            return;
+        }
+
         Canvas canvas = holder.lockCanvas();
 
         //paint background
         canvas.drawPaint(backgroundPaint);
 
-        //paint snake
-
-        //paint snake head
-
-        //paint apples
+        game.draw(canvas);
 
         holder.unlockCanvasAndPost(canvas);
     }
@@ -167,9 +162,5 @@ public class SnakeSurface extends SurfaceView implements Runnable {
                 //retry
             }
         }
-    }
-
-    private void changeDirection() {
-        snakeDirection = (snakeDirection + 1) % DIR_NUM;
     }
 }
