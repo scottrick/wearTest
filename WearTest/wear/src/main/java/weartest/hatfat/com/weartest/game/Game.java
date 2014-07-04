@@ -14,12 +14,16 @@ import weartest.hatfat.com.weartest.game.GameObject;
  */
 public class Game implements GameObject {
     private List<GameObject> objects;
+    private List<GameObject> objectsToAdd;
+    private List<GameObject> objectsToRemove;
 
     private GameSurface surface;
 
     public Game(GameSurface surface) {
         this.surface = surface;
         this.objects = new LinkedList<GameObject>();
+        this.objectsToAdd = new LinkedList<GameObject>();
+        this.objectsToRemove = new LinkedList<GameObject>();
     }
 
     public boolean onTouchEvent(MotionEvent event) {
@@ -31,6 +35,15 @@ public class Game implements GameObject {
         for (GameObject object : objects) {
             object.update(deltaTime);
         }
+
+        //add all that are queued to be added
+        objects.removeAll(objectsToRemove);
+
+        //remove all that should be removed
+        objects.addAll(objectsToAdd);
+
+        objectsToRemove.clear();
+        objectsToAdd.clear();
     }
 
     @Override
@@ -41,23 +54,23 @@ public class Game implements GameObject {
     }
 
     public void addObject(GameObject object) {
-        objects.add(object);
+        objectsToAdd.add(object);
     }
 
     public void addObjects(List<GameObject> objects) {
-        this.objects.addAll(objects);
+        objectsToAdd.addAll(objects);
     }
 
     public void removeObject(GameObject object) {
-        objects.remove(object);
+        objectsToRemove.add(object);
     }
 
     public void removeObjects(List<GameObject> objects) {
-        this.objects.removeAll(objects);
+        objectsToRemove.addAll(objects);
     }
 
     public void removeAllObjects() {
-        objects.clear();
+        objectsToRemove.addAll(objects);
     }
 
     public GameSurface getSurface() {
