@@ -29,12 +29,17 @@ public class SnakeGame extends Game {
         applePaint.setStyle(Paint.Style.FILL);
         applePaint.setColor(0xffaa0000);
 
-        snake = new Snake();
-        addObject(snake);
-
         apples = new LinkedList<GameObject>();
 
+        generateSnake();
         generateApples();
+    }
+
+    private void generateSnake() {
+        removeObject(snake);
+
+        snake = new Snake();
+        addObject(snake);
     }
 
     private void generateApples() {
@@ -66,8 +71,6 @@ public class SnakeGame extends Game {
             else {
                 snake.turnRight();
             }
-
-            generateApples();
 
             return true;
         }

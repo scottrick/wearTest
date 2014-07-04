@@ -3,6 +3,7 @@ package weartest.hatfat.com.weartest.snake;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
 
 import weartest.hatfat.com.weartest.game.GameObject;
 
@@ -11,7 +12,7 @@ import weartest.hatfat.com.weartest.game.GameObject;
  */
 public class BlockObject implements GameObject {
 
-    public static final int NUM_BLOCKS = 24;
+    public static final int NUM_BLOCKS = 25;
 
     private int x;
     private int y;
@@ -33,7 +34,7 @@ public class BlockObject implements GameObject {
         //default draw implementation for a block object.
 
         Rect rect = canvas.getClipBounds();
-        float blockSize = rect.width() / NUM_BLOCKS;
+        float blockSize = (float)rect.width() / (float)NUM_BLOCKS;
 
         canvas.drawRect(blockSize * getX(), blockSize * getY(), blockSize * (getX() + 1), blockSize * (getY() + 1), paint);
     }
@@ -52,5 +53,9 @@ public class BlockObject implements GameObject {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public void setPaint(Paint paint) {
+        this.paint = paint;
     }
 }
